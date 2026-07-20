@@ -1,0 +1,16 @@
+PRÉVENSANTÉ CI — PUBLICATION SUR GITHUB PAGES
+
+1. Aller sur https://github.com et se connecter.
+2. Cliquer sur le bouton + en haut à droite, puis « New repository ».
+3. Nom du dépôt : prevensante-ci
+4. Choisir Public.
+5. Ne pas ajouter de modèle, puis cliquer sur « Create repository ».
+6. Dans le dépôt, cliquer sur « Add file » puis « Upload files ».
+7. Déposer les fichiers index.html et .nojekyll.
+8. Cliquer sur « Commit changes ».
+9. Aller dans Settings > Pages.
+10. Dans Source, choisir « Deploy from a branch ».
+11. Choisir main puis /(root), et cliquer sur Save.
+12. L'adresse sera : https://VOTRE-IDENTIFIANT.github.io/prevensante-ci/
+
+Important : le fichier principal doit rester nommé index.html.
