@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://prevensanteci.github.io/sitemap.xml
