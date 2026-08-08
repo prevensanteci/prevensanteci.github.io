@@ -20,7 +20,7 @@
     <div class="ref" id="refBox"></div>
   </section>
   <section class="body">
-    <div class="status"><b id="mailStatus">E-mail transmis</b><span id="mailText">La demande a été envoyée directement à PrévenSanté CI, sans ouvrir l’application e-mail du patient.</span></div>
+    <div class="status"><b id="mailStatus">E-mail transmis</b></div>
     <div class="summary" id="summary" hidden><div class="summary-title" id="summaryTitle">Récapitulatif de la demande</div><div id="rows"></div></div>
     <div class="actions">
       <a class="btn wa" id="waBtn" href="https://wa.me/2250712619655" rel="noopener">Transmettre aussi sur WhatsApp</a>
@@ -34,7 +34,7 @@
 (function(){
   const p=new URLSearchParams(location.search), lang=p.get('lang')==='en'?'en':'fr', ref=p.get('ref')||'';
   document.documentElement.lang=lang;
-  const t={fr:{title:'Formulaire envoyé',lead:'Votre demande a bien été transmise à PrévenSanté CI. Notre équipe vous recontactera pour confirmer la prise en charge.',mailStatus:'E-mail transmis',mailText:"La demande a été envoyée directement à PrévenSanté CI, sans ouvrir l’application e-mail du patient.",summary:'Récapitulatif de la demande',wa:'Transmettre aussi sur WhatsApp',home:'Retour au site PrévenSanté CI',note:'Pour des raisons de sécurité, WhatsApp ne peut pas envoyer silencieusement un message à votre place. Le bouton ouvre une demande déjà préparée : il reste seulement à appuyer sur « Envoyer » dans WhatsApp.',ref:'Référence'},en:{title:'Form sent',lead:'Your request has been sent to PrévenSanté CI. Our team will contact you to confirm the service.',mailStatus:'Email sent',mailText:'The request was sent directly to PrévenSanté CI without opening the patient’s email app.',summary:'Request summary',wa:'Send also via WhatsApp',home:'Back to PrévenSanté CI',note:'For security reasons, WhatsApp cannot silently send a message on your behalf. The button opens a pre-filled request; you only need to tap “Send” in WhatsApp.',ref:'Reference'}}[lang];
+  const t={fr:{title:'Formulaire envoyé',lead:'Votre demande a bien été transmise à PrévenSanté CI. Notre équipe vous recontactera pour confirmer la prise en charge.',mailStatus:'E-mail transmis',summary:'Récapitulatif de la demande',wa:'Transmettre aussi sur WhatsApp',home:'Retour au site PrévenSanté CI',note:'Pour des raisons de sécurité, WhatsApp ne peut pas envoyer silencieusement un message à votre place. Le bouton ouvre une demande déjà préparée : il reste seulement à appuyer sur « Envoyer » dans WhatsApp.',ref:'Référence'},en:{title:'Form sent',lead:'Your request has been sent to PrévenSanté CI. Our team will contact you to confirm the service.',mailStatus:'Email sent',summary:'Request summary',wa:'Send also via WhatsApp',home:'Back to PrévenSanté CI',note:'For security reasons, WhatsApp cannot silently send a message on your behalf. The button opens a pre-filled request; you only need to tap “Send” in WhatsApp.',ref:'Reference'}}[lang];
   for(const [id,val] of Object.entries({title:t.title,lead:t.lead,mailStatus:t.mailStatus,mailText:t.mailText,summaryTitle:t.summary,note:t.note}))document.getElementById(id).textContent=val;
   document.getElementById('waBtn').textContent=t.wa;document.getElementById('homeBtn').textContent=t.home;document.getElementById('refBox').textContent=ref?`${t.ref} : ${ref}`:'';
   let data=null;try{data=JSON.parse(sessionStorage.getItem('psci_last_submission')||'null')}catch(_){data=null}
