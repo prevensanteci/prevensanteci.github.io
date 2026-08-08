@@ -34,20 +34,29 @@
 (function(){
   const p=new URLSearchParams(location.search), lang=p.get('lang')==='en'?'en':'fr', ref=p.get('ref')||'';
   document.documentElement.lang=lang;
-  const t={fr:{title:'Formulaire envoyé',lead:'Votre demande a bien été transmise à PrévenSanté CI. Notre équipe vous recontactera pour confirmer la prise en charge.',mailStatus:'E-mail transmis',summary:'Récapitulatif de la demande',wa:'Transmettre aussi sur WhatsApp',home:'Retour au site PrévenSanté CI',note:'Pour des raisons de sécurité, WhatsApp ne peut pas envoyer silencieusement un message à votre place. Le bouton ouvre une demande déjà préparée : il reste seulement à appuyer sur « Envoyer » dans WhatsApp.',ref:'Référence'},en:{title:'Form sent',lead:'Your request has been sent to PrévenSanté CI. Our team will contact you to confirm the service.',mailStatus:'Email sent',summary:'Request summary',wa:'Send also via WhatsApp',home:'Back to PrévenSanté CI',note:'For security reasons, WhatsApp cannot silently send a message on your behalf. The button opens a pre-filled request; you only need to tap “Send” in WhatsApp.',ref:'Reference'}}[lang];
-  for(const [id,val] of Object.entries({title:t.title,lead:t.lead,mailStatus:t.mailStatus,mailText:t.mailText,summaryTitle:t.summary,note:t.note}))document.getElementById(id).textContent=val;
-  document.getElementById('waBtn').textContent=t.wa;document.getElementById('homeBtn').textContent=t.home;document.getElementById('refBox').textContent=ref?`${t.ref} : ${ref}`:'';
-  let data=null;try{data=JSON.parse(sessionStorage.getItem('psci_last_submission')||'null')}catch(_){data=null}
-  if(data&&(!ref||data.reference===ref)&&Array.isArray(data.rows)){
+  const t={fr:{title:'Formulaire envoyé',lead:'Votre demande a bien été transmise à PrévenSanté CI. Notre équipe vous recontactera pour confirmer la prise en charge.',mailStatus:'E-mail transmis',summary:'Récapitulatif de la demande',wa:'Transmettre aussi sur WhatsApp',home:'Retour au site PrévenSanté CI',note:'Pour des raisons de sécurité, WhatsApp ne peut pas envoyer silencieusement un message à votre place. Le bouton ouvre une demande déjà préparée : il reste seulement à appuyer sur « Envoyer » dans WhatsApp.',ref:'Référence',head:'PRÉVENSANTÉ CI — DEMANDE DE PRISE EN CHARGE',end:'Merci de confirmer la disponibilité et l’organisation de la prise en charge.'},en:{title:'Form sent',lead:'Your request has been sent to PrévenSanté CI. Our team will contact you to confirm the service.',mailStatus:'Email sent',summary:'Request summary',wa:'Send also via WhatsApp',home:'Back to PrévenSanté CI',note:'For security reasons, WhatsApp cannot silently send a message on your behalf. The button opens a pre-filled request; you only need to tap “Send” in WhatsApp.',ref:'Reference',head:'PRÉVENSANTÉ CI — CARE REQUEST',end:'Please confirm availability and care arrangements.'}}[lang];
+  for(const [id,val] of Object.entries({title:t.title,lead:t.lead,mailStatus:t.mailStatus,summaryTitle:t.summary,note:t.note}))document.getElementById(id).textContent=val;
+  const waBtn=document.getElementById('waBtn');
+  waBtn.textContent=t.wa;document.getElementById('homeBtn').textContent=t.home;document.getElementById('refBox').textContent=ref?`${t.ref} : ${ref}`:'';
+
+  let data=readStore('sessionStorage','psci_last_submission');
+  if(!valid(data)) data=readStore('localStorage','psci_pending_submission');
+
+  if(valid(data)){
     const box=document.getElementById('summary'), rows=document.getElementById('rows');box.hidden=false;
     rows.innerHTML=data.rows.map(r=>`<div class="row"><span>${esc(r[0])}</span><strong>${esc(r[1])}</strong></div>`).join('');
-    const head=lang==='fr'?'PRÉVENSANTÉ CI — DEMANDE DE PRISE EN CHARGE':'PRÉVENSANTÉ CI — CARE REQUEST';
-    const msg=[`*${head}*`,'',...data.rows.map(r=>`*${r[0]}* : ${r[1]}`),'',lang==='fr'?'Merci de confirmer la disponibilité et l’organisation de la prise en charge.':'Please confirm availability and care arrangements.'].join('\n');
-    document.getElementById('waBtn').href='https://wa.me/2250712619655?text='+encodeURIComponent(msg);
-  } else {
-    const fallback=(lang==='fr'?`Bonjour PrévenSanté CI, je vous contacte au sujet de ma demande ${ref||''}.`:`Hello PrévenSanté CI, I am contacting you about my request ${ref||''}.`);
-    document.getElementById('waBtn').href='https://wa.me/2250712619655?text='+encodeURIComponent(fallback);
+    const msg=[`*${t.head}*`,'',...data.rows.map(r=>`*${r[0]}* : ${r[1]}`),'',t.end].join('\n');
+    const waUrl='https://wa.me/2250712619655?text='+encodeURIComponent(msg);
+    waBtn.href=waUrl;
+    waBtn.addEventListener('click',()=>{waBtn.href=waUrl},{once:false});
+    try{localStorage.removeItem('psci_pending_submission')}catch(_){}
+  }else{
+    const fallback=lang==='fr'?`Bonjour PrévenSanté CI, je vous contacte au sujet de ma demande ${ref||''}.`:`Hello PrévenSanté CI, I am contacting you about my request ${ref||''}.`;
+    waBtn.href='https://wa.me/2250712619655?text='+encodeURIComponent(fallback);
   }
+
+  function readStore(kind,key){try{return JSON.parse(window[kind].getItem(key)||'null')}catch(_){return null}}
+  function valid(x){if(!x||!Array.isArray(x.rows)||!x.rows.length)return false;if(ref&&x.reference!==ref)return false;if(x.expiresAt&&Date.now()>Number(x.expiresAt))return false;return true}
   function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 })();
 </script>
