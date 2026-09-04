@@ -16,5 +16,9 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "id": "/",
+  "scope": "/",
+  "lang": "fr",
+  "description": "Soins médicaux à domicile et coordination des soins à San Pedro, Côte d’Ivoire."
 }

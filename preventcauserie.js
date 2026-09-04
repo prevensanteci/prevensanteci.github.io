@@ -4,15 +4,27 @@
   const close = document.getElementById('preventcauserieClose');
   if (!panel || !launch || !close) return;
 
-  const hide = () => panel.classList.remove('open');
+  const setState = open => {
+    panel.classList.toggle('open', open);
+    panel.setAttribute('aria-hidden', String(!open));
+    launch.setAttribute('aria-expanded', String(open));
+  };
+  const hide = (restoreFocus = true) => {
+    setState(false);
+    if (restoreFocus) launch.focus({ preventScroll: true });
+  };
+  const show = () => {
+    setState(true);
+    setTimeout(() => panel.querySelector('button[data-preventcauserie]')?.focus({ preventScroll: true }), 20);
+  };
 
-  launch.addEventListener('click', () => panel.classList.toggle('open'));
-  close.addEventListener('click', hide);
+  launch.addEventListener('click', () => panel.classList.contains('open') ? hide() : show());
+  close.addEventListener('click', () => hide());
 
   document.querySelectorAll('[data-preventcauserie]').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.preventcauserie;
-      hide();
+      hide(false);
       if (['consultation', 'lab', 'meds', 'imaging', 'specialist', 'callback'].includes(target)) {
         openModal(target);
       } else if (target === 'business') {
@@ -22,4 +34,11 @@
       }
     });
   });
+
+  document.addEventListener('pointerdown', event => {
+    if (!panel.classList.contains('open')) return;
+    if (!panel.contains(event.target) && !launch.contains(event.target)) hide(false);
+  });
+
+  window.PreventcauserieUI = { hide, show };
 })();
