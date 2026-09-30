@@ -60,8 +60,6 @@ document.addEventListener('click',e=>{
   if(pack){track('pack_click',{pack:pack.dataset.pack});return}
   const open=e.target.closest('[data-open]');
   if(open){track('form_open',{service:open.dataset.open||'generic'});return}
-  const cb=e.target.closest('[data-callback]');
-  if(cb){track('callback_request');return}
 });
 const form=document.getElementById('rdvForm');
 if(form){

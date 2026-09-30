@@ -25,7 +25,7 @@
     btn.addEventListener('click', () => {
       const target = btn.dataset.preventcauserie;
       hide(false);
-      if (['consultation', 'lab', 'meds', 'imaging', 'specialist', 'callback'].includes(target)) {
+      if (['consultation', 'lab', 'meds', 'imaging', 'specialist'].includes(target)) {
         openModal(target);
       } else if (target === 'business') {
         document.querySelector('#business')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
